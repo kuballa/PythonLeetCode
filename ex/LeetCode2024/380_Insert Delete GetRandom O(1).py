@@ -6,26 +6,33 @@ import random
 class RandomizedSet:
 
     def __init__(self):
-      self.nums = []
-      self.length = len(self.nums)
+      self.lst = []
+      self.idx_map = {}
+
+    def search(self, val: int) -> int:
+      return val in self.idx_map
 
     def insert(self, val: int) -> bool:
-      if val in self.nums:
+      if self.search(val):
         return False
-      else:
-        self.nums.append(val)
-        return True
+      
+      self.lst.append(val)
+      self.idx_map[val] = len(self.lst) - 1
+      return True
 
     def remove(self, val: int) -> bool:
-      if val in self.nums:
-        self.nums.remove(val)
-        return True
-      else:
+      if not self.search(val):
         return False
+      
+      idx = self.idx_map[val]
+      self.lst[idx] = self.lst[-1]
+      self.idx_map[self.lst[-1]] = idx
+      self.lst.pop()
+      del self.idx_map[val]
+      return True
 
     def getRandom(self) -> int:
-      if len(self.nums) >= 1:
-        return random.choice(self.nums)
+      return random.choice(self.nums)
 
 
 # Your RandomizedSet object will be instantiated and called as such:
